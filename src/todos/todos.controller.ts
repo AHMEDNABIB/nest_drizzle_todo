@@ -6,13 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todos.dto';
-import { TodosService } from './todos.service';
 import { UpdateTodoDto } from './dto/update-todos.dto';
-
+import { TodosService } from './todos.service';
+import { UsersGuard } from '../users/users.guard';
 @Controller('todos')
+@UseGuards(UsersGuard)
 export class TodosController {
   constructor(private readonly todoService: TodosService) {}
   @Get()
