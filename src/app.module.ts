@@ -2,22 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import * as schema from './todos/schema/todos.schema';
-
-import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
-
+import { ConfigModule } from '@nestjs/config';
+import { DrizzleModule } from './drizzle/drizzle.module';
 import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
-    DrizzlePostgresModule.register({
-      tag: 'DB_DEV',
-      postgres: {
-        url: 'postgres://postgres:rabbi@127.0.0.1:5432/todos',
-      },
-      config: { schema: { ...schema } },
-    }),
     TodosModule,
+    DrizzleModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [AppService],

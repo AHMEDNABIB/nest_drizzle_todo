@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { PG_CONNECTION } from '../constants';
+import * as schema from '../drizzle/todos.schema';
 import { CreateTodoDto } from './dto/create-todos.dto';
 import { UpdateTodoDto } from './dto/update-todos.dto';
-import * as schema from './schema/todos.schema';
 @Injectable()
 export class TodosService {
   constructor(
-    @Inject('DB_DEV') private db: PostgresJsDatabase<typeof schema>,
+    @Inject(PG_CONNECTION) private db: NodePgDatabase<typeof schema>,
   ) {}
 
   async getAllTodos() {
