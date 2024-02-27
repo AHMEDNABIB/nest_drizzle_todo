@@ -42,7 +42,9 @@ export const todos = pgTable('todos', {
   isdone: boolean('isdone').default(false),
   isdeleted: boolean('isdeleted').default(false),
   isimportant: boolean('isimportant').default(false),
-  userId: integer('user_id'),
+  userId: integer('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
   expired_at: date('expired_at').default(null),
 });
 

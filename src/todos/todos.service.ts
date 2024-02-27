@@ -26,6 +26,7 @@ export class TodosService {
   async createTodos(createTodoDto: CreateTodoDto, id: number) {
     // console.log(req.user);
     createTodoDto.userId = id;
+    // console.log(createTodoDto);
     return await this.db.insert(schema.todos).values(createTodoDto);
   }
 
