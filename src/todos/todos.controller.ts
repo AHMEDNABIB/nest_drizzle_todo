@@ -10,7 +10,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { UsersGuard } from '../users/users.guard';
+import { UsersGuard } from '../users/gurard/users.guard';
 import { CreateTodoDto } from './dto/create-todos.dto';
 import { UpdateTodoDto } from './dto/update-todos.dto';
 import { TodosService } from './todos.service';
