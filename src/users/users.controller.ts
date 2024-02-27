@@ -9,19 +9,29 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { Roles } from './decorator/roles.decorator';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateUserDto } from './dto/update.users.dto';
-import { UsersGuard } from './users.guard';
+import { Role } from './enum/role.enum';
+import { RolesGuard } from './gurard/roles.guard';
+import { UsersGuard } from './gurard/users.guard';
 import { UsersService } from './users.service';
 
 @Controller('api/users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
-  @UseGuards(UsersGuard)
+
+  @Roles(Role.Admin)
+  @UseGuards(UsersGuard, RolesGuard)
   @Get()
   async getUsers() {
     return this.userService.getUsers();
+  }
+
+  @Get(':id')
+  getUser(@Param('id') id: number) {
+    return this.userService.getUser(id);
   }
 
   @Post('register')
@@ -43,5 +53,21 @@ export class UsersController {
     return { message: 'Login successful', loginUser };
   }
 
-  
+  @Roles(Role.Admin)
+  @UseGuards(UsersGuard, RolesGuard)
+  @Patch(':id')
+  updateTodo(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateUser: UpdateUserDto,
+  ) {
+    console.log(updateUser);
+    return this.userService.updateUser(id, updateUser);
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(UsersGuard, RolesGuard)
+  @Delete(':id')
+  softDeleteTodo(@Param('id') id: number) {
+    return this.userService.deleteUser(id);
+  }
 }

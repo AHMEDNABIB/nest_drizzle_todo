@@ -59,9 +59,18 @@ export class UsersService {
 
   async registerUser(
     registerDto: RegisterDto,
-  ): Promise<{ message: string; user: { name: string; email: string } }> {
+  ): Promise<{ message: string; user?: { name: string; email: string } }> {
     const { name, email, password } = registerDto;
     try {
+      const existingUser: any = await this.db
+        .select()
+        .from(schema.users)
+        .where(eq(schema.users.email, email));
+
+      if (existingUser) {
+        return { message: 'User with this email already exists' };
+      }
+
       const hash = await bcrypt.hash(password, 10);
       await this.db
         .insert(schema.users)
@@ -80,6 +89,13 @@ export class UsersService {
     } catch (error) {
       throw new Error('An error occurred while retrieving users');
     }
+  }
+
+  async getUser(id: number) {
+    return await this.db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, id));
   }
 
   async deleteUser(id: number) {
