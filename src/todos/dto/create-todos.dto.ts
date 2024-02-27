@@ -21,6 +21,7 @@ export class CreateTodoDto {
   isDeleted: boolean;
 
   isImportant: boolean;
+  userId: number;
 
   //   expired_at?: Date;
 }

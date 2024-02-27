@@ -14,4 +14,6 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'User password is required' })
   @Length(6)
   password: string;
+
+  role: 'admin' | 'user';
 }

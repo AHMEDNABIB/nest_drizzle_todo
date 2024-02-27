@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
-import { UsersService } from './users.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { UpdateUserDto } from './dto/update.users.dto';
 import { UsersGuard } from './users.guard';
+import { UsersService } from './users.service';
 
 @Controller('api/users')
 export class UsersController {
@@ -31,4 +42,6 @@ export class UsersController {
     const loginUser = await this.userService.loginUser(loginDto);
     return { message: 'Login successful', loginUser };
   }
+
+  
 }
