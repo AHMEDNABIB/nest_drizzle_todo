@@ -24,6 +24,11 @@ export class UsersController {
     return this.userService.getUsers();
   }
 
+  @Get(':id')
+  getUser(@Param('id') id: number) {
+    return this.userService.getUser(id);
+  }
+
   @Post('register')
   async registerUser(
     @Body() registerDto: RegisterDto,
