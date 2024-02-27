@@ -9,9 +9,10 @@ import * as bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { PG_CONNECTION } from '../constants';
-import * as schema from '../drizzle/users.schema';
+import * as schema from '../drizzle/schema';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UpdateUserDto } from './dto/update.users.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +32,8 @@ export class UsersService {
         .from(schema.users)
         .where(eq(schema.users.email, email));
 
+      // console.log(user[0].id);
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -39,13 +42,14 @@ export class UsersService {
       if (!passwordMatch) {
         throw new UnauthorizedException('Invalid login credentials');
       }
-      const payload = { userId: user.id };
+      const payload = { userId: user[0].id, role: user[0].role };
 
-      console.log(this.jwtService);
+      // console.log(this.jwtService);
 
       const token = this.jwtService.sign(payload);
+      // console.log(payload);
       const loginUser = { email, token };
-      console.log(token);
+      // console.log(token);
       return loginUser;
     } catch (error) {
       console.log(error);
@@ -76,5 +80,24 @@ export class UsersService {
     } catch (error) {
       throw new Error('An error occurred while retrieving users');
     }
+  }
+
+  async deleteUser(id: number) {
+    return await this.db
+      .delete(schema.users)
+      .where(eq(schema.users.id, id))
+      .returning({ deletedId: schema.users.id });
+  }
+
+  async updateUser(id: any, updateUser: UpdateUserDto) {
+    if (updateUser.password) {
+      const hash = await bcrypt.hash(updateUser.password, 10);
+      updateUser.password = hash;
+    }
+    return await this.db
+      .update(schema.users)
+      .set(updateUser)
+      .where(eq(schema.users.id, id))
+      .returning({ updatedId: schema.users.id });
   }
 }

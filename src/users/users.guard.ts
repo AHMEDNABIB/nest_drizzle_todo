@@ -27,6 +27,8 @@ export class UsersGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
+      // console.log(payload);
+
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();

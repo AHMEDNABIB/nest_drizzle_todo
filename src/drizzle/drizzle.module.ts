@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { PG_CONNECTION } from '../constants';
-import * as todosschema from './todos.schema';
-import * as usersschema from './users.schema';
+import * as schema from './schema';
 
 @Module({
   providers: [
@@ -14,7 +13,6 @@ import * as usersschema from './users.schema';
         const pool = new Pool({
           connectionString: process.env.DATABASE_URL,
         });
-        const schema = { todosschema, usersschema };
 
         return drizzle(pool, { schema });
       },
