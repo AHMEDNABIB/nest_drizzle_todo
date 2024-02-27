@@ -43,5 +43,19 @@ export class UsersController {
     return { message: 'Login successful', loginUser };
   }
 
-  
+  @UseGuards(UsersGuard)
+  @Patch(':id')
+  updateTodo(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateUser: UpdateUserDto,
+  ) {
+    console.log(updateUser);
+    return this.userService.updateUser(id, updateUser);
+  }
+
+  @UseGuards(UsersGuard)
+  @Delete(':id')
+  softDeleteTodo(@Param('id') id: number) {
+    return this.userService.deleteUser(id);
+  }
 }
